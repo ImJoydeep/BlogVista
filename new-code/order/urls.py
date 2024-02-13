@@ -1,0 +1,88 @@
+from django.urls import path
+from order.order_reindex import OrderReindexView
+from order.generate_picklist import CratesView, GeneratePickListPdf, GeneratePickList, SearchPickedProduct, ShipmentView, SaveDraft,\
+    ShipmentDeleteMultipleView
+
+from order.verify_order_api import CommentOrder, CompleteOrderView, CompletePickingView, VerifyMultipleOrderView, VerifyOrderView
+from .hold_unhold import CancelOrderView, HoldOrderView, UnholdOrderView
+from .bulk_edit_views import BulkEditOrder, ExcludeCrateList, GetCountryStateList
+from .order_invoice import CustomerDetailsView, GetStoreWiseProduct, OrderInvoiceGet, OrderInvoicePicklist
+from .views import GetOrderList, GetOrderDetails, OrderDeleteMultipleView,\
+    InsertState, CratesAPIView, CratesUpdateAPIView, CratesDeleteAPIView, CrateStatusUpdate
+from order import order_reason
+from order import order_picksheet
+urlpatterns = [
+    path('',
+         GetOrderList.as_view(), name="orders"),
+    path('orders-details/',
+         GetOrderDetails.as_view(), name="orders-details"),
+    path('delete/',
+         OrderDeleteMultipleView.as_view
+         (), name='order_multiple_delete'),
+    path('bulkedit/', BulkEditOrder.as_view(), name="order_bulkedit"),
+    path('statelist/', GetCountryStateList.as_view(),
+         name="country_wise_state_list"),
+    path('hold/', HoldOrderView.as_view(), name="hold_order"),
+    path('unhold/', UnholdOrderView.as_view(), name="unhold_order"),
+    path('cancel/', CancelOrderView.as_view(), name="cancel_order"),
+    path('storeproduct/', GetStoreWiseProduct.as_view(),
+         name="order_store_wise_product"),
+    path('customerdetails/', CustomerDetailsView.as_view(),
+         name="customer_details"),
+    path('state_insert/', InsertState.as_view(),
+         name="state_insert"),
+    path('verifyorder/<OD_ID>/', VerifyOrderView.as_view(),
+         name="verify_order"),
+    path('comment/<OD_ID>/', CommentOrder.as_view(),
+         name="comment_order"),
+    path('pick/', CompletePickingView.as_view(),
+         name="complete_picking"),
+    path('complete/', CompleteOrderView.as_view(),
+         name="complete_order"),
+    path('invoice/', OrderInvoiceGet.as_view(),
+         name="order_invoice_create"),
+    path('generate-pick-list/', GeneratePickListPdf.as_view(),
+         name="order_invoice_create"),
+    path('generate-picklist/', GeneratePickList.as_view(),
+         name="Get order item data in picklist"),
+    path('shipment/', ShipmentView.as_view(), name="Shipment List"),
+    path('shipment/delete/', ShipmentDeleteMultipleView.as_view(),
+         name="Shipment Delete"),
+    path("search-barcode-product/",
+         SearchPickedProduct.as_view(), name="Search Product"),
+    path('save-draft/', SaveDraft.as_view(), name='save Draft'),
+    path('verify-bulk-order/', VerifyMultipleOrderView.as_view(),
+         name="Verify Bulk Orders"),
+    path('crates/', CratesView.as_view(), name="Crates"),
+    path('invoice/<OD_SHP_ID>/', OrderInvoicePicklist.as_view(),
+         name="Get Invoice in Picklist"),
+    path('create-invoice/', OrderInvoicePicklist.as_view(),
+         name="Create Invoice"),
+    path('reindex/', OrderReindexView.as_view(),
+         name="Get Invoice in Picklist"),
+    path('crate/', CratesAPIView.as_view(),
+         name="List Crates"),
+    path('crate/<int:pk>/', CratesUpdateAPIView.as_view(),
+         name="Update Crates"),
+    path('crate/statusupdate/', CrateStatusUpdate.as_view(),
+         name="Crates Status Update"),
+    path('crate/delete/', CratesDeleteAPIView.as_view(),
+         name="Delete Crates"),
+    path('reason/', order_reason.ReasonAPIView.as_view(),
+         name="List Reason"),
+    path('reason/<int:pk>/', order_reason.ReasonUpdateAPIView.as_view(),
+         name="Update Reason"),
+    path('reason/statusupdate/', order_reason.ReasonStatusUpdate.as_view(),
+         name="Reason Status Update"),
+    path('reason/delete/', order_reason.ReasonDeleteAPIView.as_view(),
+         name="Delete Reason"),
+    path('crates-exclude-list/', ExcludeCrateList.as_view(), name="excluded_crates"),
+    path('picksheet-note/', order_picksheet.PicksheetNoteAPIView.as_view(),name="List Picksheet Note"),
+    path('picksheet-note/<int:pk>/', order_picksheet.PicksheetUpdateAPIView.as_view(),
+         name="Update Picksheet Note"),
+    path('picksheet-note/statusupdate/', order_picksheet.PicksheetStatusUpdate.as_view(),
+         name="Picksheet Note Status Update"),
+    path('picksheet-note/delete/', order_picksheet.PicksheetDeleteAPIView.as_view(),
+         name="Delete Picksheet Note"),
+    path('picksheet-sku/', order_picksheet.GetAssignedSKU.as_view(),name="Picksheet SKU List"),
+]
